@@ -5,6 +5,7 @@ import com.abhinav.personservice.services.PersonService;
 import lombok.AllArgsConstructor;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.Output;
+import org.springframework.cloud.stream.messaging.Source;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.util.StringUtils;
@@ -18,10 +19,10 @@ import java.util.stream.Stream;
 
 @RestController
 @AllArgsConstructor
-@EnableBinding(MyChannel.class)
+@EnableBinding(Source.class)
 public class PersonController {
     PersonService personService;
-    MyChannel myChannel;
+    Source source;
 
     @GetMapping("/get")
     public Stream<Person> get(@RequestParam(required = false) String name,
@@ -69,11 +70,6 @@ public class PersonController {
     // Producer
     public void send(String person) {
         System.out.println("Sending: " + person);
-        myChannel.sendMessage().send(MessageBuilder.withPayload(person).build());
+        source.output().send(MessageBuilder.withPayload(person).build());
     }
-}
-
-interface MyChannel {
-    @Output("output")
-    MessageChannel sendMessage();
 }
