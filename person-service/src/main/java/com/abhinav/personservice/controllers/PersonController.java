@@ -6,8 +6,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.math.BigInteger;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 @RestController
@@ -40,5 +42,16 @@ public class PersonController {
     @GetMapping("/slow")
     public String slow() {
         return personService.cacheableMethod("asdasd");
+    }
+
+    @GetMapping("/session")
+    public String getSession(HttpSession session) {
+        UUID uuid = (UUID) session.getAttribute("uuid");
+        if (uuid == null) {
+            uuid = UUID.randomUUID();
+        }
+
+        session.setAttribute("uuid", uuid);
+        return uuid.toString();
     }
 }
