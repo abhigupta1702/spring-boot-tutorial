@@ -16,7 +16,7 @@ public class PersonAggregateControler {
 
     @GetMapping("/person/{id}")
     public Person getPerson(@PathVariable String id) {
-        ResponseEntity<Person> responseEntity = this.restTemplate.exchange("http://localhost:9001/{id}",
+        ResponseEntity<Person> responseEntity = this.restTemplate.exchange("http://person-service/{id}",
                 HttpMethod.GET, null, Person.class, id);
         return responseEntity.getBody();
     }
