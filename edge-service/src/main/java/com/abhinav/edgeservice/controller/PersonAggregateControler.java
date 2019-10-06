@@ -2,6 +2,7 @@ package com.abhinav.edgeservice.controller;
 
 import com.abhinav.edgeservice.entities.Person;
 import com.abhinav.edgeservice.service.PersonServiceClient;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +20,13 @@ public class PersonAggregateControler {
     private final PersonServiceClient personServiceClient;
 
     @GetMapping("/feign/{id}")
+    @HystrixCommand(fallbackMethod = "getDefaultPerson")
     public Person getPersonFeign(@PathVariable String id) {
         return personServiceClient.getById(new BigInteger(id)).get();
+    }
+
+    public Person getDefaultPerson(@PathVariable String id) {
+        return new Person(new BigInteger("88"), "ABC", "place");
     }
 
     @GetMapping("/person/{id}")
