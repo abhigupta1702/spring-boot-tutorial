@@ -3,6 +3,10 @@ package com.abhinav.personservice.controllers;
 import com.abhinav.personservice.entities.Person;
 import com.abhinav.personservice.services.PersonService;
 import lombok.AllArgsConstructor;
+import org.springframework.cloud.stream.annotation.EnableBinding;
+import org.springframework.cloud.stream.annotation.Output;
+import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,8 +18,10 @@ import java.util.stream.Stream;
 
 @RestController
 @AllArgsConstructor
+@EnableBinding(MyChannel.class)
 public class PersonController {
     PersonService personService;
+    MyChannel myChannel;
 
     @GetMapping("/get")
     public Stream<Person> get(@RequestParam(required = false) String name,
@@ -54,4 +60,20 @@ public class PersonController {
         session.setAttribute("uuid", uuid);
         return uuid.toString();
     }
+
+    @GetMapping("/send/{msg}")
+    public void sendMsg(@PathVariable String msg) {
+        send(msg);
+    }
+
+    // Producer
+    public void send(String person) {
+        System.out.println("Sending: " + person);
+        myChannel.sendMessage().send(MessageBuilder.withPayload(person).build());
+    }
+}
+
+interface MyChannel {
+    @Output("output")
+    MessageChannel sendMessage();
 }
