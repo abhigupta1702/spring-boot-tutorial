@@ -32,6 +32,8 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+	compile group: 'org.springframework.session', name: 'spring-session-data-redis', version: '2.1.9.RELEASE'
+	compile group: 'io.lettuce', name: 'lettuce-core', version: '5.2.0.RELEASE'
 }
 
 ext {

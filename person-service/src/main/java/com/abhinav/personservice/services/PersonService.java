@@ -3,10 +3,13 @@ package com.abhinav.personservice.services;
 import com.abhinav.personservice.entities.Person;
 import com.abhinav.personservice.repository.PersonRepository;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 @Service
@@ -32,5 +35,12 @@ public class PersonService {
 
     public Person save (Person person) {
         return personRepository.save(person);
+    }
+
+    @SneakyThrows
+    @Cacheable("cacheKey")
+    public String cacheableMethod(String input) {
+        Thread.sleep(2000);
+        return UUID.randomUUID().toString();
     }
 }

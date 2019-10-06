@@ -36,4 +36,9 @@ public class PersonController {
     public Person save(@RequestBody Person person) {
         return personService.save(person);
     }
+
+    @GetMapping("/slow")
+    public String slow() {
+        return personService.cacheableMethod("asdasd");
+    }
 }
